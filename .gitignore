@@ -2,3 +2,5 @@ node_modules
 pgdata
 .git
 .vscode
+error.log
+combined.log

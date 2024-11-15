@@ -3,6 +3,7 @@ import { twitRouter } from './twit/twit.controller'
 import dotenv from 'dotenv'
 import path from 'path'
 import { PrismaClient } from '@prisma/client'
+import { logger } from './utils/log'
 
 dotenv.config() 
 
@@ -35,12 +36,13 @@ async function main() {
     res.status(404).json({message: 'not found'})
   })
 
-  // app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  //   res.status(500).send('Что-то пошло не так!')
-  // })
+  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    logger.error(err.stack)
+    res.status(500).send('Что-то пошло не так!')
+  })
 
   app.listen(port, () =>
-    console.log(`Server running on port ${port}, http://localhost:${port}`)
+    logger.info(`Server running on port ${port}, http://localhost:${port}`)
   )
 }
 
@@ -48,7 +50,7 @@ main().then(async () => {
     await prisma.$disconnect()
   })
   .catch(async (e) => {
-    console.error(e)
+    logger.error(e)
     await prisma.$disconnect()
     process.exit(1)
   })
