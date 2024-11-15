@@ -1,4 +1,4 @@
-FROM node:23
+FROM node:22.11.0
 RUN npm install -g nodemon
 WORKDIR /app
 COPY ./package.json .

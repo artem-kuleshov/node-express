@@ -4,8 +4,22 @@ services:
       dockerfile: Dockerfile
     container_name: api_backend   
     restart: "always" 
+    links:
+      - postgres
     ports:      
       - '4000:4000'  
       - '3000:3000'  
     volumes:
       - ./:/app
+  postgres:
+    image: postgres:latest
+    container_name: api_backend_postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+      POSTGRES_DB: db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data/pgdata

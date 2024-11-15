@@ -1,15 +1,14 @@
-import express from 'express'
-import { twitRouter } from './src/twit/twit.controller.js'
+import express, { NextFunction, Request, Response } from 'express'
+import { twitRouter } from './twit/twit.controller'
 import dotenv from 'dotenv'
 import path from 'path'
-import { fileURLToPath } from 'url'
+import { PrismaClient } from '@prisma/client'
 
 dotenv.config() 
 
 const app = express()
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const prisma = new PrismaClient()
 
 app.set('views', path.join(__dirname, '/src/views'))
 app.set('view engine', 'ejs')
@@ -30,20 +29,26 @@ async function main() {
 
   app.get('/error', (req, res) => {
     throw new Error('This is error!!!!');
-    
   })
 
   app.all('*', (req, res) => {
     res.status(404).json({message: 'not found'})
   })
 
-  app.use((err, req, res, next) => {
-    res.status(500).send('Что-то пошло не так!')
-  })
+  // app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  //   res.status(500).send('Что-то пошло не так!')
+  // })
 
   app.listen(port, () =>
     console.log(`Server running on port ${port}, http://localhost:${port}`)
   )
 }
 
-main()
+main().then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })
