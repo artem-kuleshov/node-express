@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import path from 'path'
 import { PrismaClient } from '@prisma/client'
 import { logger } from './utils/log'
+import helmet from "helmet";
 
 dotenv.config() 
 
@@ -16,7 +17,8 @@ app.set('view engine', 'ejs')
 
 const port = process.env.PORT || 4000
 
-async function main() {
+async function main() {  
+  app.use(helmet());
   app.use(express.json())
 
   app.get('/profile', (req, res) => {
