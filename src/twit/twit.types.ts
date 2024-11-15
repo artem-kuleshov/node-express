@@ -1,3 +1,3 @@
-export interface ICreateTwit {
+export interface ITwit {
     text: string
 }

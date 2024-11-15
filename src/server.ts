@@ -32,15 +32,13 @@ async function main() {
 
   app.use('/api/twits', twitRouter)
 
-  app.get('/error', (req, res) => {
-    throw new Error('This is error!!!!');
-  })
-
   app.all('*', (req, res) => {
     res.status(404).json({message: 'not found'})
   })
 
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    console.log("errororroror")
+    console.log(err.name)
     logger.error(err.stack)
     res.status(500).send('Что-то пошло не так!')
   })
